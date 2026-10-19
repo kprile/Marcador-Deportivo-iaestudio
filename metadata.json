@@ -1,0 +1,6 @@
+{
+  "name": "Marcador Deportivo Bluetooth",
+  "description": "Marcador deportivo para pádel, tenis y ping-pong con control remoto Bluetooth selfie, anuncios de voz por altavoz y proyecto Flutter exportable.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

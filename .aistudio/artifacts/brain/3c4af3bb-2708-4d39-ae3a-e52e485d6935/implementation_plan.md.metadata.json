@@ -1,0 +1,6 @@
+{
+  "summary": "Plan de implementación completo para el Marcador Deportivo Bluetooth (Pádel, Tenis y Ping-Pong) con interfaz PWA interactiva de alta visibilidad, detección de control remoto selfie Bluetooth (1 pulsación = Jugador 1, 2 pulsaciones = Jugador 2), síntesis de voz en español latinoamericano, pantalla de diagnóstico de señales HID, modo sin conexión con WakeLock, e integrador/exportador de código fuente Flutter completo para generación de APK en Android e iOS.",
+  "updatedAt": "2026-10-19T14:44:02.138171618Z",
+  "requestFeedback": true,
+  "userFacing": true
+}
