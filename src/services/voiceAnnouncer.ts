@@ -78,11 +78,18 @@ class VoiceAnnouncerService {
     if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;
     this.voices = window.speechSynthesis.getVoices();
 
-    // Prioritize natural / neural / Google / Apple enhanced Spanish voices
-    if (!this.settings.voiceURI && this.voices.length > 0) {
-      const spanishVoices = this.getSpanishVoices();
-      if (spanishVoices.length > 0) {
-        // Find natural neural voice first
+    const spanishVoices = this.getSpanishVoices();
+    if (spanishVoices.length > 0) {
+      // 1. Look specifically for Microsoft Yolanda (as requested by user)
+      const yolanda = spanishVoices.find((v) => v.name.toLowerCase().includes('yolanda'));
+      if (yolanda) {
+        this.settings.voiceURI = yolanda.voiceURI;
+        this.saveSettings({ voiceURI: yolanda.voiceURI });
+        return;
+      }
+
+      // 2. If not already configured or previous voice missing, select best natural voice
+      if (!this.settings.voiceURI) {
         const bestVoice =
           spanishVoices.find((v) => this.isHighQualityVoice(v) && !v.lang.startsWith('es-ES')) ||
           spanishVoices.find((v) => this.isHighQualityVoice(v)) ||
@@ -91,6 +98,7 @@ class VoiceAnnouncerService {
 
         if (bestVoice) {
           this.settings.voiceURI = bestVoice.voiceURI;
+          this.saveSettings({ voiceURI: bestVoice.voiceURI });
         }
       }
     }
@@ -100,6 +108,7 @@ class VoiceAnnouncerService {
     const name = v.name.toLowerCase();
     const uri = (v.voiceURI || '').toLowerCase();
     return (
+      name.includes('yolanda') ||
       name.includes('natural') ||
       name.includes('neural') ||
       name.includes('google') ||
@@ -123,8 +132,13 @@ class VoiceAnnouncerService {
     const all = this.getAvailableVoices();
     const spanish = all.filter((v) => v.lang.startsWith('es'));
 
-    // Sort natural / neural voices to top
+    // Sort Yolanda to the absolute TOP, then other natural/neural voices, then regular
     return spanish.sort((a, b) => {
+      const aIsYolanda = a.name.toLowerCase().includes('yolanda');
+      const bIsYolanda = b.name.toLowerCase().includes('yolanda');
+      if (aIsYolanda && !bIsYolanda) return -1;
+      if (!aIsYolanda && bIsYolanda) return 1;
+
       const aHq = this.isHighQualityVoice(a);
       const bHq = this.isHighQualityVoice(b);
       if (aHq && !bHq) return -1;

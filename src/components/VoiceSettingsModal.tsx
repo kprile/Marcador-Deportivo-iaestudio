@@ -153,12 +153,17 @@ export const VoiceSettingsModal: React.FC<VoiceSettingsModalProps> = ({
               onChange={(e) => handleChange('voiceURI', e.target.value)}
               className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs sm:text-sm text-white focus:outline-none focus:border-yellow-400"
             >
-              <option value="">(Automática) Mejor voz natural disponible</option>
+              <option value="">(Automática) Microsoft Yolanda Online (Natural)</option>
               {availableVoices.map((v) => {
+                const isYolanda = v.name.toLowerCase().includes('yolanda');
                 const isHQ = voiceAnnouncer.isHighQualityVoice(v);
                 return (
                   <option key={v.voiceURI} value={v.voiceURI}>
-                    {isHQ ? '⭐ [Natural / Neuronal] ' : ''}
+                    {isYolanda
+                      ? '⭐ [PREDETERMINADA] '
+                      : isHQ
+                      ? '⭐ [Natural / Neuronal] '
+                      : ''}
                     {v.name} ({v.lang})
                   </option>
                 );
